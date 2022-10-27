@@ -23,7 +23,8 @@ start_redis:
 	-d \
 	-v ${MOUNT_POINT}/redis:/data \
 	redis \
-	redis-server --save 60 1 --loglevel	verbose 
+	redis-server --save 60 1 --loglevel verbose 
+	#docker run -it --network bridge --rm redis redis-cli -h 172.17.0.2
 
 start_mongo:
 	docker run \
