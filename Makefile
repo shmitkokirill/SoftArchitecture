@@ -53,7 +53,9 @@ start_elastic:
 	-p 9200:9200 \
 	-e ELASTIC_PASSWORD=111111 \
 	-e "discovery.type=single-node" \
-	-d \
+	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/data \
+	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/config/certs \
+	-it \
 	docker.elastic.co/elasticsearch/elasticsearch:8.4.3
 
 	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt ./elastic/	
