@@ -15,6 +15,8 @@ start_postgres:
 	postgres \
 	-c log_statement=all
 
+	# docker run -it --rm --network bridge postgres psql -h 172.17.0.2 -U kirill test
+
 start_redis:
 	docker run \
 	--rm \
@@ -36,23 +38,25 @@ start_mongo:
 	-v ${MOUNT_POINT}/mongo:/data/db \
 	-d \
 	mongo
+	# docker run -it --network ${NETWORK} --rm mongo mongosh --host 172.17.0.2 mongo
+	# docker exec -it mongo bash
+	## mongosh -u kirill -p 111 admin
+	## use testDB
 
 start_elastic:
-	# 1. sudo sysctl -w vm.max_map_count=262144    - malloc reference
+	sudo sysctl -w vm.max_map_count=262144
 	# 2. command below:
 	docker run \
 	--rm \
 	--name elasticsearch \
 	--net ${NETWORK} \
 	-p 9200:9200 \
-	-p 9300:9300 \
 	-e ELASTIC_PASSWORD=111111 \
+	-e "discovery.type=single-node" \
 	-d \
 	docker.elastic.co/elasticsearch/elasticsearch:8.4.3
 
-	# docker cp \
-	# elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt \
-	# ${MOUNT_POINT}/elastic/
+	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt ./elastic/	
 
 	# When container is running:
 	# docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password
@@ -60,8 +64,12 @@ start_elastic:
 	# check : curl --cacert elastic/http_ca.crt -u elastic https://localhost:9200
 	# -v ${MOUNT_POINT}/elastic/data:/usr/share/elasticsearch/data \
 	# -v elasticVol:/usr/share/elasticsearch/config/certs \
+	## curl -X PUT "https://[localhost]:9200/indexname/_doc/1?pretty" -H 'Content-Type: application/json' -d '{ "field" : "value" }'
+	## curl --cacert elastic/http_ca.crt -u elastic -X GET "https://localhost:9200/newindex/_doc/1?pretty"
+	## curl --cacert elastic/http_ca.crt -u elastic -X DELETE "https://localhost:9200/newindex/_doc/1?pretty"
 
 start_neo:
+	# u: neo4j, p: 111
 	docker run \
 	--rm \
 	--name neo4j \
@@ -69,6 +77,8 @@ start_neo:
     -p 7474:7474 \
 	-p 7687:7687 \
     -v ${MOUNT_POINT}/neo4j/data:/data \
+	-v ${MOUNT_POINT}/neo4j/logs:/logs \
+	-v ${MOUNT_POINT}/neo4j/conf:/conf \
 	-d \
     neo4j
 
