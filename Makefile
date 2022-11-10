@@ -55,17 +55,16 @@ start_elastic:
 	-e "discovery.type=single-node" \
 	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/data \
 	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/config/certs \
-	-it \
+	-d \
 	docker.elastic.co/elasticsearch/elasticsearch:8.4.3
 
 	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt ./elastic/	
 
 	# When container is running:
+	# curl -u elastic -x GET "http://localhost:9200/index/_doc/1?pretty"
 	# docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password
 	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt .
 	# check : curl --cacert elastic/http_ca.crt -u elastic https://localhost:9200
-	# -v ${MOUNT_POINT}/elastic/data:/usr/share/elasticsearch/data \
-	# -v elasticVol:/usr/share/elasticsearch/config/certs \
 	## curl -X PUT "https://[localhost]:9200/indexname/_doc/1?pretty" -H 'Content-Type: application/json' -d '{ "field" : "value" }'
 	## curl --cacert elastic/http_ca.crt -u elastic -X GET "https://localhost:9200/newindex/_doc/1?pretty"
 	## curl --cacert elastic/http_ca.crt -u elastic -X DELETE "https://localhost:9200/newindex/_doc/1?pretty"
