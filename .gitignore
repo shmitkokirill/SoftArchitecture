@@ -5,3 +5,5 @@ redis
 ElasticSecurity.txt
 neo4j
 Output
+history_*
+
