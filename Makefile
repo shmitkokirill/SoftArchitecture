@@ -22,6 +22,7 @@ start_redis:
 	--rm \
 	--name redis \
 	--network ${NETWORK} \
+	-p 6379:6379 \
 	-d \
 	-v ${MOUNT_POINT}/redis:/data \
 	redis \
@@ -42,6 +43,7 @@ start_mongo:
 	# docker exec -it mongo bash
 	## mongosh -u kirill -p 111 admin
 	## use testDB
+	#docker exec -it mongo mongosh -u kirill -p 111 admin
 
 start_elastic:
 	sudo sysctl -w vm.max_map_count=262144
