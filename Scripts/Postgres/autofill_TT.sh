@@ -36,7 +36,7 @@ build_timetable_per_days() {
     for (( j=0; j < $1; j++ ));
     do
         les_count=$((1 + $RANDOM % 6));
-        dt=$(date -d "2022-11-01 $j days" +%Y-%m-%d);
+        dt=$(date -d "$2 $j days" +%Y-%m-%d);
         for (( i=0; i < $les_count; i++ ));
         do
             tm=$(get_lec_time $i);
@@ -53,7 +53,9 @@ build_timetable_per_days() {
     done
 }
 
-build_timetable_per_days $1
+# $1 - count of days (Ex: 100) for fill; $2 - date (Ex: 2022-11-01) - from it 
+# algo will start
+build_timetable_per_days $1 "$2"
 
 # fill in VISIT -table
 . /tmp/autofill_Vis.sh

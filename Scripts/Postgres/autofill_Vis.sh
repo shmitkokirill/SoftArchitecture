@@ -43,15 +43,26 @@ build_visit() {
         unset y[1]
         unset y[-1]
         tt_ids=("${y[@]}"); #array
+
+        # get tt ids from Timetable -table
+        tt_d_str=$(export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' \
+            -d 'university' \
+            -c "select date::timestamp::date from Timetable t where t.groupId='$g_code';")
+        readarray -t y <<< "$tt_d_str"
+        unset y[0]
+        unset y[1]
+        unset y[-1]
+        tt_dates=("${y[@]}"); #array
         # for each lesson set up visit for given student
         for (( j=0; j < ${#tt_ids[@]}; j++ ));
         do
             tt_id=${tt_ids[$j]};
+            tt_date=${tt_dates[$j]};
             isVisited=$(get_isVisited $(($RANDOM % 2)));
             export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' \
                 -d 'university' \
-                -c "INSERT INTO VISIT(studentId, isVisited, tt_id) 
-                    VALUES ('$st_code', '$isVisited', $tt_id);"
+                -c "INSERT INTO VISIT(studentId, isVisited, tt_id, date) 
+                    VALUES ('$st_code', '$isVisited', $tt_id, '$tt_date');"
         done
     done
 }

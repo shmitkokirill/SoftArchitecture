@@ -63,10 +63,7 @@ start_elastic:
 	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt ./elastic/	
 
 	# When container is running:
-	# curl -u elastic -x GET "http://localhost:9200/index/_doc/1?pretty"
-	# docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-reset-password
-	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt .
-	# check : curl --cacert elastic/http_ca.crt -u elastic https://localhost:9200
+	# curl -u elastic -X GET "http://localhost:9200/lessons/_doc/1?pretty"
 	## curl -X PUT "https://[localhost]:9200/indexname/_doc/1?pretty" -H 'Content-Type: application/json' -d '{ "field" : "value" }'
 	## curl --cacert elastic/http_ca.crt -u elastic -X GET "https://localhost:9200/newindex/_doc/1?pretty"
 	## curl --cacert elastic/http_ca.crt -u elastic -X DELETE "https://localhost:9200/newindex/_doc/1?pretty"
