@@ -240,7 +240,7 @@ INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD79','БСБО-02-19')
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD80','БСБО-02-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD81','БСБО-02-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD82','БСБО-02-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD113','БСБО-02-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('SqUD113','БСБО-02-19');
 
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD83','БСБО-03-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD84','БСБО-03-19');

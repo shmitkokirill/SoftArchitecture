@@ -20,9 +20,11 @@ unset y[1]
 unset y[-1]
 dates=("${y[@]}"); #array
 
+echo $(date -d "${dates[0]}" +%Y-%m-%d);
+
 for (( i=0; i<${#dates[@]}; i++ ));
 do 
-    d="$(echo -e "${dates[$i]}" | tr -d '[:space:]')"  # trim wrong!!!
+    d=$(date -d "${dates[$i]}" +%Y-%m-%d)
     les_id="$(echo -e "${les_ids[$i]}" | tr -d '[:space:]')"  # trim
     curl -X POST "http://neo4j:111@localhost:7474/db/neo4j/tx/commit" \
         -H "Accept: application/json" -H 'Content-type: application/json' \
