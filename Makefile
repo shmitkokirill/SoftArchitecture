@@ -66,7 +66,8 @@ start_elastic:
 	# curl -u elastic -X GET "http://localhost:9200/lessons/_doc/1?pretty"
 	## curl -X PUT "https://[localhost]:9200/indexname/_doc/1?pretty" -H 'Content-Type: application/json' -d '{ "field" : "value" }'
 	## curl --cacert elastic/http_ca.crt -u elastic -X GET "https://localhost:9200/newindex/_doc/1?pretty"
-	## curl --cacert elastic/http_ca.crt -u elastic -X DELETE "https://localhost:9200/newindex/_doc/1?pretty"
+       ## curl --cacert elastic/http_ca.crt -u elastic -X DELETE "https://localhost:9200/newindex/_doc/1?pretty"
+	#curl -u elastic:111111 -X POST "http://localhost:9200/lessons/_update/0?pretty" -H 'Content-Type: application/json' -d '{"doc" : {"material": "Материал"}}'
 
 start_neo:
 	# u: neo4j, p: 111
