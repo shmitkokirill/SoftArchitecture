@@ -163,19 +163,19 @@ INSERT INTO Students(code, fullname) VALUES ('STUD96','Кузин А.В.');
 INSERT INTO Students(code, fullname) VALUES ('STUD97','Кузнецов А.М.');
 INSERT INTO Students(code, fullname) VALUES ('STUD98','Ломако А.А.');
 INSERT INTO Students(code, fullname) VALUES ('STUD99','Лукьянов Е.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD100','Осин А.К.');
-INSERT INTO Students(code, fullname) VALUES ('STUD101','Рязанов А.П.');
-INSERT INTO Students(code, fullname) VALUES ('STUD102','Семченко А.Е.');
-INSERT INTO Students(code, fullname) VALUES ('STUD103','Сливинский А.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD104','Солодовник Н.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD105','Федотов В.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD106','Фомин Н.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD107','Хабибулин Ф.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD108','Шихиев М.Ю.');
-INSERT INTO Students(code, fullname) VALUES ('STUD109','Штейн А.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD110','Баранов Д.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD111','Смирнов Н.Н.');
-INSERT INTO Students(code, fullname) VALUES ('STUD112','Шутов Д.В.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd10','Осин А.К.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd11','Рязанов А.П.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd12','Семченко А.Е.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd13','Сливинский А.А.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd14','Солодовник Н.А.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd15','Федотов В.С.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd16','Фомин Н.С.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd17','Хабибулин Ф.С.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd18','Шихиев М.Ю.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd19','Штейн А.А.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd20','Баранов Д.В.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd21','Смирнов Н.Н.');
+INSERT INTO Students(code, fullname) VALUES ('dTUd22','Шутов Д.В.');
 
 
 //----------------------------------GROUPS--------------------------------
@@ -183,7 +183,7 @@ INSERT INTO Students(code, fullname) VALUES ('STUD112','Шутов Д.В.');
 INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-01-19','КБ-3','09.03.02', 2023);
 INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-02-19','КБ-3','09.03.02', 2023);
 INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-03-19','КБ-3','09.03.02', 2023);
-INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БИСО-01-19','КБ-4','09.03.02', 2023);
+INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БИСО-01-19','КБ-4','09.03.04', 2023);
 
 
 //----------------------------------GROUPSTUDENT--------------------------------
@@ -259,19 +259,19 @@ INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD96','БСБО-03-19')
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD97','БСБО-03-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD98','БСБО-03-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD99','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD100','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD101','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD102','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD103','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD104','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD105','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD106','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD107','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD108','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD109','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD110','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD111','БСБО-03-19');
-INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD112','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd10','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd11','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd12','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd13','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd14','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd15','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd16','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd17','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd18','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd19','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd20','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd21','БСБО-03-19');
+INSERT INTO GroupStudent(code_st, code_group) VALUES ('dTUd22','БСБО-03-19');
 
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD29','БИСО-01-19');
 INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD30','БИСО-01-19');

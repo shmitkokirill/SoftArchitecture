@@ -33,6 +33,7 @@ start_mongo:
 	docker run \
 	--rm \
 	--network ${NETWORK} \
+	-p 27017:27017 \
 	--name mongo \
 	-e MONGO_INITDB_ROOT_USERNAME=kirill \
 	-e MONGO_INITDB_ROOT_PASSWORD=111 \
@@ -44,6 +45,10 @@ start_mongo:
 	## mongosh -u kirill -p 111 admin
 	## use testDB
 	#docker exec -it mongo mongosh -u kirill -p 111 admin
+	#systemctl stop mongodb.service
+	#sudo rm /var/lib/mongodb/mongod.lock
+	#sudo rm /var/lib/mongodb/.lock
+	#sudo rm /var/lib/mongodb/WiredTiger.lock
 
 start_elastic:
 	sudo sysctl -w vm.max_map_count=262144
@@ -51,6 +56,7 @@ start_elastic:
 	docker run \
 	--rm \
 	--name elasticsearch \
+	--memory=2048m \
 	--net ${NETWORK} \
 	-p 9200:9200 \
 	-e ELASTIC_PASSWORD=111111 \

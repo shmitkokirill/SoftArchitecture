@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # $1 - start date
-
+host='172.17.0.1'
 start_d=$(date -d "$1" +%Y-%m-%d);
 
 declare -a dates;
 
 dates+=($start_d);
-for (( j=1; j < 3; j++ ));
+for (( j=1; j < 6; j++ ));
 do
     dates+=($(date -d "${dates[(( $j-1 ))]} + 7 days" +%Y-%m-%d));
 done
 
-export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' \
+export PGPASSWORD='111'; psql -h $host -U 'kirill' \
             -d 'university' \
             -c "
 create or replace function partition_for_visits() returns trigger as \$\$
@@ -55,7 +55,7 @@ END;
 \$\$ language plpgsql;
 ";
 
-export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' \
+export PGPASSWORD='111'; psql -h $host -U 'kirill' \
             -d 'university' \
             -c "create trigger partition_visits before insert on 
                     VISIT for each row execute 
