@@ -1,5 +1,20 @@
 NETWORK := bridge
 MOUNT_POINT := $(shell pwd)
+
+# for test
+start_postgres_deb:
+	docker run \
+	--rm \
+	--network ${NETWORK} \
+	--name postgresql \
+	-e POSTGRES_DB=test \
+	-e POSTGRES_USER=kirill \
+	-e POSTGRES_PASSWORD=111 \
+	-p 5432:5432 \
+	-d \
+	debezium/postgres:12 \
+	-c log_statement=all
+
 start_postgres:
 	docker run \
 	--rm \
@@ -51,7 +66,7 @@ start_mongo:
 	#sudo rm /var/lib/mongodb/WiredTiger.lock
 
 start_elastic:
-	sudo sysctl -w vm.max_map_count=262144
+	# sudo sysctl -w vm.max_map_count=262144
 	# 2. command below:
 	docker run \
 	--rm \
@@ -62,10 +77,10 @@ start_elastic:
 	-e ELASTIC_PASSWORD=111111 \
 	-e "discovery.type=single-node" \
 	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/data \
-	-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/config/certs \
-	-d \
+	-it \
 	docker.elastic.co/elasticsearch/elasticsearch:8.4.3
 
+	#-v ${MOUNT_POINT}/elastic:/usr/share/elasticsearch/config/certs \
 	# docker cp elasticsearch:/usr/share/elasticsearch/config/certs/http_ca.crt ./elastic/	
 
 	# When container is running:
