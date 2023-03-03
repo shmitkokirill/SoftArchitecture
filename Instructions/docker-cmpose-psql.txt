@@ -1,4 +1,8 @@
 https://github.com/debezium/debezium-examples/tree/main/tutorial#using-postgres
+Что сделать:
+    InfluenceDB - ?
+    Пхнуть туда логи какие-нибудь
+    Как работают коннекторы джавовские - где лежат, и где искать
 
 # Start the topology as defined in 
                 https://debezium.io/documentation/reference/stable/tutorial.html
