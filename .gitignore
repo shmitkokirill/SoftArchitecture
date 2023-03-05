@@ -1,9 +1,7 @@
 elastic
 mongo
-postgresql
-redis
-ElasticSecurity.txt
+postgres
 neo4j
 Output
 history_*
-
+kafka
