@@ -1,5 +1,5 @@
 #!/bin/bash
-CONTAINER="postgresql"
+CONTAINER="postgres"
 
 echo "Output from the $CONTAINER"
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER="postgresql"
+CONTAINER="postgres"
 
 docker cp ./into_container.sh $CONTAINER:/tmp/into_container.sh
 docker cp ./autofill_TT.sh $CONTAINER:/tmp/autofill_TT.sh

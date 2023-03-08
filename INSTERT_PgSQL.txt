@@ -11,17 +11,7 @@ CREATE TABLE Lesson(
 id serial primary key,
 Title varchar(200)
 );
-⦁	Создаем общую таблицу с посещениями
-create table VISIT
-(
-id serial,
-studentId varchar(6),
-isVisited bool,
-tt_id int,
-date date,
-FOREIGN KEY (studentId) REFERENCES Students(code),
-FOREIGN KEY (tt_id) REFERENCES Titmetable(id)
-);
+
 ⦁	Создаем таблицу с Группами
  CREATE TABLE Groups
 (
@@ -30,15 +20,7 @@ cafedra varchar(4),
 spec varchar(8),
 EndYear int
 );
-⦁	Создаем таблицу Группа-Студент
-CREATE TABLE GroupStudent
-(
-	id serial primary key,
-	code_st varchar(6),
-	code_group varchar(10),
-	FOREIGN KEY (code_st) REFERENCES Students(code),
-	FOREIGN KEY (code_group) REFERENCES Groups(code)
-);
+
 ⦁	Создаем таблицу с расписанием
 CREATE TABLE Timetable
 (
@@ -49,6 +31,27 @@ lessonId int,
 lessonNum int, 
 FOREIGN KEY (groupId) REFERENCES Groups(code), 
 FOREIGN KEY (lessonId) REFERENCES Lesson(id)
+);
+
+⦁	Создаем общую таблицу с посещениями
+create table VISIT
+(
+id serial,
+studentId varchar(6),
+isVisited bool,
+tt_id int,
+date date,
+FOREIGN KEY (studentId) REFERENCES Students(code),
+FOREIGN KEY (tt_id) REFERENCES Timetable(id)
+);
+⦁	Создаем таблицу Группа-Студент
+CREATE TABLE GroupStudent
+(
+	id serial primary key,
+	code_st varchar(6),
+	code_group varchar(10),
+	FOREIGN KEY (code_st) REFERENCES Students(code),
+	FOREIGN KEY (code_group) REFERENCES Groups(code)
 );
 
 //----------------------------------STUDENTS--------------------------------
@@ -331,29 +334,3 @@ INSERT INTO Lesson(title) VALUES ('Основы управленческой д�
 INSERT INTO Lesson(title) VALUES ('Методы анализа данных');
 INSERT INTO Lesson(title) VALUES ('Администрирование инфраструктуры виртуализации сетевых функций');
 INSERT INTO Lesson(title) VALUES ('Безопасность операционных систем');
-
-//----------------------------------VISIT--------------------------------(пример)
-
-INSERT INTO Visit(studentId, date, isVisited) VALUES ('STUD1', '2022-09-01 9:00',true);
-INSERT INTO Visit(studentId, date, isVisited) VALUES ('STUD1', '2022-09-01 10:40',true);
-INSERT INTO Visit(studentId, date, isVisited) VALUES ('STUD1', '2022-09-01 12:40',true);
-INSERT INTO Visit(studentId, date, isVisited) VALUES ('STUD1', '2022-09-01 14:20',true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

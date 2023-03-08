@@ -1,6 +1,8 @@
 #!/bin/bash
 # export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' -d 'university' -c "$1"
-host='172.17.0.1'
+host='172.21.0.4'
+pswd='postgres'
+usr='postgres'
 get_lec_time() {
     case $1 in
         0) echo "09:00" ;;
@@ -14,7 +16,7 @@ get_lec_time() {
 }
 
 # get group cods from Group -table
-g_cods_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+g_cods_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
     -d 'university' -c 'select code from Groups;')
 readarray -t y <<< "$g_cods_str"
 unset y[0]
@@ -23,7 +25,7 @@ unset y[-1]
 g_cods=("${y[@]}");
 
 # get lesson's id's 
-les_ids_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+les_ids_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
     -d 'university' -c 'select id from Lesson;')
 readarray -t y <<< "$les_ids_str"
 unset y[0]
@@ -45,7 +47,7 @@ build_timetable_per_days() {
             indx_g=$(($RANDOM % ${#g_cods[@]}))
             g_code="$(echo -e "${g_cods[$indx_g]}" | tr -d '[:space:]')"  # trim 
             date_time="$dt $tm";
-            export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+            export PGPASSWORD=$pswd; psql -h $host -U $usr \
                 -d 'university' \
                 -c "INSERT INTO Timetable(date, groupId, lessonId, lessonNum) 
                     VALUES ('$date_time', '$g_code', $les_id, (($i + 1)));"
@@ -58,4 +60,4 @@ build_timetable_per_days() {
 build_timetable_per_days $1 "$2"
 
 # fill in VISIT -table
-. /tmp/autofill_Vis.sh
+. autofill_Vis.sh

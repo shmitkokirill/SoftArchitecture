@@ -1,6 +1,8 @@
 #!/bin/bash
 
-host='172.17.0.1'
+host='172.21.0.4'
+pswd='postgres'
+usr='postgres'
 
 get_isVisited() {
     case $1 in
@@ -11,7 +13,7 @@ get_isVisited() {
 }
 
 # get stud cods from GroupStudent -table
-st_cods_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+st_cods_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
     -d 'university' -c 'select code_st from GroupStudent;')
 readarray -t y <<< "$st_cods_str"
 unset y[0]
@@ -20,7 +22,7 @@ unset y[-1]
 st_cods=("${y[@]}"); #array
 
 # get group cods from GroupStudent -table
-g_cods_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+g_cods_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
     -d 'university' -c 'select code_group from GroupStudent;')
 readarray -t y <<< "$g_cods_str"
 unset y[0]
@@ -37,7 +39,7 @@ build_visit() {
         st_code="$(echo -e "${st_cods[$i]}" | tr -d '[:space:]')"  # trim
 
         # get tt ids from Timetable -table
-        tt_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+        tt_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
             -d 'university' \
             -c "select id from Timetable t where t.groupId='$g_code';")
         readarray -t y <<< "$tt_str"
@@ -47,7 +49,7 @@ build_visit() {
         tt_ids=("${y[@]}"); #array
 
         # get tt ids from Timetable -table
-        tt_d_str=$(export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+        tt_d_str=$(export PGPASSWORD=$pswd; psql -h $host -U $usr \
             -d 'university' \
             -c "select date::timestamp::date from Timetable t where t.groupId='$g_code';")
         readarray -t y <<< "$tt_d_str"
@@ -61,7 +63,7 @@ build_visit() {
             tt_id=${tt_ids[$j]};
             tt_date=${tt_dates[$j]};
             isVisited=$(get_isVisited $(($RANDOM % 2)));
-            export PGPASSWORD='111'; psql -h $host -U 'kirill' \
+            export PGPASSWORD=$pswd; psql -h $host -U $usr \
                 -d 'university' \
                 -c "INSERT INTO VISIT(studentId, isVisited, tt_id, date) 
                     VALUES ('$st_code', '$isVisited', $tt_id, '$tt_date');"
