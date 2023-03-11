@@ -1,0 +1,7 @@
+# Получить последнее изменение
+curl -XGET "http://localhost:9200/dbserverpostgres.public.students/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+  "size": 1,
+  "_source": ["after"],
+  "sort": [{"ts_ms": "desc"}]
+}'
