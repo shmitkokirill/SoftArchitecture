@@ -199,6 +199,7 @@ services:
     volumes:
       - $PWD/neo4j/logs:/logs
       - $PWD/neo4j/conf:/conf
+      - $PWD/neo4j/data:/data
     networks:
       - shared_net
 
