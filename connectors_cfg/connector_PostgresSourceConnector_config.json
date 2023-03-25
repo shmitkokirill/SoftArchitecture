@@ -2,13 +2,16 @@
   "name": "PostgresSourceConnector",
   "config": {
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.converter.schemas.enable": false,
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": false,
     "tasks.max": "1",
     "topic.prefix": "dbserverpostgres",
     "database.hostname": "postgres",
     "database.port": "5432",
     "database.user": "postgres",
     "database.password": "postgres",
-    "database.dbname": "university",
-    "output.data.format": "JSON"
+    "database.dbname": "university"
   }
 }

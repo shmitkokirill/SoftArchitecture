@@ -1,0 +1,14 @@
+{
+  "name": "Neo4jSinkConnectorConnector_0",
+  "config": {
+    "connector.class": "streams.kafka.connect.sink.Neo4jSinkConnector",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "topics": "postgres-sync.public.groups",
+    "topics.regex": "",
+    "neo4j.authentication.basic.username": "neo4j",
+    "neo4j.authentication.basic.password": "228008",
+    "neo4j.server.uri": "bolt://neo4j:7687",
+    "neo4j.topic.cypher.postgres-sync.public.groups": "CREATE (p:Group{name: event.after.id, spec: event.after.speciality_fk})"
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "name" : "confluent-postgresql-source",
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "topic.prefix" : "postgresql_",
+    "connection.host" : "postgres",
+    "connection.port" : "5432",
+    "connection.user" : "postgres",
+    "connection.password": "postgres",
+    "db.name": "university",
+    "table.whitelist": "students",
+    "output.data.format": "JSON",
+    "db.timezone": "UTC",
+    "tasks.max" : "1"
+}

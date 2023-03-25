@@ -1,11 +1,12 @@
 {
-  "name": "Neo4jSinkConnectorJSONString",
+  "name": "Neo4jSinkConnector",
   "config": {
-    "topics": "dbserverpostgres.public.students",
+    "topics": 
+        "dbserverpostgres.public.students, dbserverpostgres.public.visit",
     "connector.class": "streams.kafka.connect.sink.Neo4jSinkConnector",
-    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "key.converter.schemas.enable": false,
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter.schemas.enable": false,
     "errors.retry.timeout": "-1",
     "errors.retry.delay.max.ms": "1000",
@@ -15,6 +16,9 @@
     "neo4j.server.uri": "bolt://neo4j:7687",
     "neo4j.authentication.basic.username": "neo4j",
     "neo4j.authentication.basic.password": "connect",
-    "neo4j.topic.cypher.dbserverpostgres.public.students": "MERGE (p:Student{code: event.code, name: event.fullname})"
+    "neo4j.topic.cypher.dbserverpostgres.public.students": 
+        "CREATE (p:Student{code: event.after.code, name: event.after.fullname})",
+    "neo4j.topic.cypher.dbserverpostgres.public.visit": 
+        "CREATE (p:Visit{id: event.after.id, vis: event.after.isvisited})"
   }
 }

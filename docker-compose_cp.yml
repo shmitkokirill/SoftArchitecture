@@ -2,7 +2,7 @@ version: '2'
 services:
   zookeeper:
     container_name: zookeeper
-    image: confluentinc/cp-zookeeper:6.2.0
+    image: confluentinc/cp-zookeeper:7.3.2
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -10,7 +10,7 @@ services:
       - shared_net
 
   broker:
-    image: confluentinc/cp-kafka:6.2.0
+    image: confluentinc/cp-kafka:7.3.2
     container_name: broker
     depends_on:
       - zookeeper
@@ -33,7 +33,7 @@ services:
       - shared_net
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.2.0
+    image: confluentinc/cp-schema-registry:7.3.2
     container_name: schema-registry
     ports:
       - "8081:8081"
@@ -46,7 +46,7 @@ services:
       - shared_net
 
   kafka-connect:
-    image: confluentinc/cp-kafka-connect-base:6.2.0
+    image: confluentinc/cp-kafka-connect:7.3.2
     container_name: kafka-connect
     depends_on:
       - broker
@@ -54,15 +54,17 @@ services:
     ports:
       - 8083:8083
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: "broker:29092"
+      CONNECT_BOOTSTRAP_SERVERS: broker:29092
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: kafka-connect
       CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-stajtus
+
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
       CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
       CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: 
         "[%d] %p %X{connector.context}%m (%c:%L)%n"
@@ -86,9 +88,10 @@ services:
       - |
         echo "Installing Connector"
         # there are new connectors for our db
-        confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.0.1
-        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:14.0.5
-        confluent-hub install --no-prompt neo4j/kafka-connect-neo4j:2.0.0
+        #confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.0.1
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:14.0.5
+        #confluent-hub install --no-prompt neo4j/kafka-connect-neo4j:2.0.0
+        #confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.4
         #
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run &
@@ -97,33 +100,8 @@ services:
     networks:
       - shared_net
 
-  ksqldb:
-    # *-----------------------------*
-    # To connect to ksqlDB CLI
-    #   docker exec --interactive --tty ksqldb ksql http://localhost:8088
-    # *-----------------------------*
-    image: confluentinc/ksqldb-server:0.21.0
-    container_name: ksqldb
-    depends_on:
-      - broker
-      - schema-registry
-    ports:
-      - "8088:8088"
-    environment:
-      KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_BOOTSTRAP_SERVERS: broker:29092
-      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
-      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      KSQL_STREAMS_PRODUCER_MAX_BLOCK_MS: 9223372036854775807
-      KSQL_KSQL_CONNECT_URL: http://kafka-connect:8083
-      KSQL_KSQL_SERVICE_ID: confluent_rmoff_01
-      KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
-    networks:
-      - shared_net
-
   control-center:
-    image: confluentinc/cp-enterprise-control-center:6.2.0
+    image: confluentinc/cp-enterprise-control-center:7.1.6
     container_name: control-center
     depends_on:
       - broker
