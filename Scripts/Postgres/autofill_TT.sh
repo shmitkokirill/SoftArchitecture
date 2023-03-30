@@ -1,6 +1,6 @@
 #!/bin/bash
 # export PGPASSWORD='111'; psql -h '172.17.0.2' -U 'kirill' -d 'university' -c "$1"
-host='172.21.0.4'
+host='172.20.0.6'
 pswd='postgres'
 usr='postgres'
 get_lec_time() {

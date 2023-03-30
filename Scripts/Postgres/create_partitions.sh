@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # $1 - min date
-host='172.21.0.4'
+host='172.20.0.6'
 pswd='postgres'
 usr='postgres'
 

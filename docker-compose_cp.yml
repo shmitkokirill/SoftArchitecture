@@ -92,6 +92,7 @@ services:
         #confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:14.0.5
         #confluent-hub install --no-prompt neo4j/kafka-connect-neo4j:2.0.0
         #confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.4
+        #confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.9.1
         #
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run &
@@ -178,6 +179,19 @@ services:
       - $PWD/neo4j/logs:/logs
       - $PWD/neo4j/conf:/conf
       - $PWD/neo4j/data:/data
+    networks:
+      - shared_net
+        
+  mongo:
+    image: mongo:jammy
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+    volumes:
+      - $PWD/mongo:/data/db
     networks:
       - shared_net
 

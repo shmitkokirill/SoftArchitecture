@@ -6,3 +6,4 @@ Output
 history_*
 kafka
 data
+MongoSinkScript/__pycache__

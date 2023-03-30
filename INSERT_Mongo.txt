@@ -1,0 +1,23 @@
+[
+{
+    "title" : ""
+    "cafedras" : [
+        {
+            "code" : ""
+            "title" : ""
+            "specialties" : [
+                {
+                    "code" : ""
+                    "title" : ""
+                    "courses" : [
+                        {
+                            "id" : 0
+                            "title" : ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+]

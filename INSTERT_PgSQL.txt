@@ -12,13 +12,44 @@ id serial primary key,
 Title varchar(200)
 );
 
+CREATE TABLE Institution
+(
+    id serial primary key,
+    title varchar(50)
+);
+
+CREATE TABLE Cafedra
+(
+    code varchar(4) primary key,
+    title varchar(50),
+    institutionId int,
+    FOREIGN KEY (institutionId) REFERENCES Institution(id)
+);
+
+CREATE TABLE Specialty
+(
+    code varchar(8) primary key,
+    title varchar(50),
+    cafedraCode varchar(4),
+    FOREIGN KEY (cafedraCode) REFERENCES Cafedra(code)
+);
+
+CREATE TABLE Course
+(
+    id serial primary key,
+    title varchar(50),
+    specCode varchar(8),
+    FOREIGN KEY (specCode) REFERENCES Specialty(code)
+);
+
 ⦁	Создаем таблицу с Группами
  CREATE TABLE Groups
 (
 code varchar(10) primary key,
 cafedra varchar(4),
 spec varchar(8),
-EndYear int
+EndYear int,
+FOREIGN KEY (spec) REFERENCES Specialty(code) 
 );
 
 ⦁	Создаем таблицу с расписанием
@@ -53,6 +84,27 @@ CREATE TABLE GroupStudent
 	FOREIGN KEY (code_st) REFERENCES Students(code),
 	FOREIGN KEY (code_group) REFERENCES Groups(code)
 );
+
+//----------------------------------COURSES--------------------------------
+INSERT INTO Course(title, specCode) VALUES ('Математика', '09.03.02');
+INSERT INTO Course(title, specCode) VALUES ('Право', '09.03.04');
+
+//----------------------------------SPECIALTIES----------------------------
+INSERT INTO Specialty(code, title, cafedraCode) VALUES ('09.03.02',
+'Информационные системы и технологии', 'КБ-3');
+INSERT INTO Specialty(code, title, cafedraCode VALUES ('09.03.04',
+'Сервисные технологии', 'КБ-4');
+
+//----------------------------------CAFEDRAS----------------------------
+INSERT INTO Cafedra(code, title, institutionId) VALUES ('КБ-3','Безопасность
+программных решений', 1);
+INSERT INTO Cafedra(code, title, institutionId) VALUES ('КБ-4','Безопасность и
+безопасность', 1);
+
+//----------------------------------Institutions----------------------------
+INSERT INTO Institution(title) VALUES ('Кибербезопасности и цифровых технологий'); --1
+INSERT INTO Institution(title) VALUES ('Экономический'); --2
+INSERT INTO Institution(title) VALUES ('Хороший'); --3
 
 //----------------------------------STUDENTS--------------------------------
 // БСБО-01-19
