@@ -38,8 +38,8 @@ CREATE TABLE Course
 (
     id serial primary key,
     title varchar(50),
-    specCode varchar(8),
-    FOREIGN KEY (specCode) REFERENCES Specialty(code)
+    cafCode varchar(4),
+    FOREIGN KEY (cafCode) REFERENCES Cafedra(code)
 );
 
 ⦁	Создаем таблицу с Группами
@@ -86,8 +86,7 @@ CREATE TABLE GroupStudent
 );
 
 //----------------------------------COURSES--------------------------------
-INSERT INTO Course(title, specCode) VALUES ('Математика', '09.03.02');
-INSERT INTO Course(title, specCode) VALUES ('Право', '09.03.04');
+INSERT INTO Course(title, cafCode) VALUES ('Математика', 'КБ-3');
 
 //----------------------------------SPECIALTIES----------------------------
 INSERT INTO Specialty(code, title, cafedraCode) VALUES ('09.03.02',
