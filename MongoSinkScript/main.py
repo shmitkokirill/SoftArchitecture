@@ -11,23 +11,121 @@ MONGO_DB          = 'university'
 BROKER_HOST       = 'broker:29092'
 
 def process_institutions(json_data, db):
-    if json_data['op'] == 'c' and json_data['after'] != None:
+    if json_data['after'] != None:
         title = json_data['after']['title']
+        id = json_data['after']['id']
+        if json_data['op'] == 'c':
+            try:
+                db["institutions"].insert_one({"id" : id, "title" : title})
+            except:
+                print("Could not insert (c) into Instituions")
+        if json_data['op'] == 'u':
+            try:
+                db["institutions"].update_one({"id" : id}, {"$set": {"title" : title}})
+            except:
+                print("Could not insert (u) into Instituions")
+    if json_data['op'] == 'd' and json_data['before'] != None:
+        id = json_data['before']['id']
         try:
-            db["institutions"].insert_one({"title" : title})
+            db["institutions"].delete_one({"id" : id})
         except:
-            print("Could not insert into Instituions")
-    print(json_data)
+            print("Could not delete from Instituions")
 
 def process_cafedras(json_data, db):
-
-    print(json_data)
+    if json_data['after'] != None:
+        id = json_data['after']['institutionid']
+        title = json_data['after']['title']
+        code = json_data['after']['code']
+        if json_data['op'] == 'c':
+            push_obj = {"$push" : {"cafedras" : {"code" : code, "title" : title}}}
+            try:
+                db["institutions"].update_one({"id" : id}, push_obj)
+            except:
+                print("Could not insert (c) into Inst.Cafedras")
+        if json_data['op'] == 'u':
+            arr_filter = [{"caf.code":code}]
+            set_obj = {"$set":{"cafedras.$[caf].title":title}}
+            try:
+                db["institutions"].update_one(
+                        {"id":id}, set_obj, array_filters=arr_filter
+                )
+            except:
+                print("Could not insert (u) into Inst.Cafedras")
+    if json_data['op'] == 'd' and json_data['before'] != None:
+        code = json_data['before']['code']
+        pull_obj = {"$pull" : {"cafedras" : {"code" : code}}}
+        try:
+            db["institutions"].update_one({"cafedras.code" : code}, pull_obj)
+        except:
+            print("Could not delete from Inst.Cafedras")
 
 def process_specialties(json_data, db):
-    print(json_data)
+    if json_data['after'] != None:
+        caf_code = json_data['after']['cafedracode']
+        title = json_data['after']['title']
+        code = json_data['after']['code']
+        if json_data['op'] == 'c':
+            arr_filter = [{"caf.code":caf_code}]
+            push_obj = {"$push" : {"cafedras.$[caf].specialties" : {"code" : code, "title" : title}}}
+            try:
+                db["institutions"].update_one(
+                        {"cafedras.code" : caf_code}, push_obj, array_filters=arr_filter
+                )
+            except:
+                print("Could not insert (c) into Inst.Cafs.Specs")
+        if json_data['op'] == 'u':
+            arr_filter = [{"spec.code":code}]
+            set_obj = {"$set":{"cafedras.$.specialties.$[spec].title":title}}
+            try:
+                db["institutions"].update_one(
+                        {"cafedras.specialties.code":code}, set_obj, array_filters=arr_filter
+                )
+            except:
+                print("Could not insert (u) into Inst.Cafs.Specs")
+    if json_data['op'] == 'd' and json_data['before'] != None:
+        code = json_data['before']['code']
+        pull_obj = {"$pull" : {"cafedras.$.specialties" : {"code" : code}}}
+        try:
+            db["institutions"].update_one({"cafedras.specialties.code" : code}, pull_obj)
+        except:
+            print("Could not delete from Inst.Cafs.Specs")
 
 def process_courses(json_data, db):
     print(json_data)
+    if json_data['after'] != None:
+        spec_code = json_data['after']['speccode']
+        title = json_data['after']['title']
+        id = json_data['after']['id']
+        if json_data['op'] == 'c':
+            arr_filter = [{"spec.code":spec_code}]
+            push_obj = {"$push" : {"cafedras.$.specialties.$[spec].courses" : {"id" : id, "title" : title}}}
+            try:
+                db["institutions"].update_one(
+                        {"cafedras.specialties.code" : spec_code}, push_obj, array_filters=arr_filter
+                )
+            except:
+                print("Could not insert (c) into Inst.Cafs.Specs.Courses")
+        if json_data['op'] == 'u':
+            arr_filter = [{"course.id":id}, {"scode.code":spec_code}]
+            set_obj = {
+                    "$set":{"cafedras.$.specialties.$[scode].courses.$[course].title":title}}
+            try:
+                db["institutions"].update_one(
+                        {"cafedras.specialties.courses.id":id}, set_obj, array_filters=arr_filter
+                )
+            except:
+                print("Could not insert (u) into Inst.Cafs.Specs.Courses")
+    if json_data['op'] == 'd' and json_data['before'] != None:
+        id = json_data['before']['id']
+        spec_code = db["institutions"].find_one({"cafedras.specialties.courses.id" : 1})
+
+        print(spec_code)
+       # arr_filter = [{"scode.code":}]
+       # pull_obj = {"$pull" : {"cafedras.$.specialties.$[scode].courses" : {"id" : id}}}
+       # try:
+       #     db["institutions"].update_one({"cafedras.specialties.courses.id" : id}, pull_obj, array_filters=arr_filter)
+       # except:
+       #     print("Could not delete from Inst.Cafs.Specs.Courses")
 
 # connect to mongo
 try:
