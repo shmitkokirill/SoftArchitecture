@@ -17,10 +17,11 @@
     "neo4j.authentication.basic.username": "neo4j",
     "neo4j.authentication.basic.password": "connect",
     "neo4j.topic.cypher.dbserverpostgres.public.institution": 
-        "call apoc.do.case([event.op = 'd', 'match (i:Institute{id : b_i_id}) detatch delete i', event.op = 'c', 'create (i:Institute{id: a_i_id, title: a_i_title})', event.op = 'u', 'match(i:Institute {id:a_i_id}) set i.title = a_i_title'], '', {b_i_id:event.before.id, a_i_id:event.after.id, a_i_title:event.after.title}) yield value as v return v",
+        "call apoc.do.case([event.op = 'd', 'match (i:Institute{id : b_i_id}) detach delete i', event.op = 'c', 'create (i:Institute{id: a_i_id, title: a_i_title})', event.op = 'u', 'match(i:Institute {id:a_i_id}) set i.title = a_i_title'], '', {b_i_id:event.before.id, a_i_id:event.after.id, a_i_title:event.after.title}) yield value as v return v",
     "neo4j.topic.cypher.dbserverpostgres.public.students": "",
     "neo4j.topic.cypher.dbserverpostgres.public.groups": "",
-    "neo4j.topic.cypher.dbserverpostgres.public.cafedra": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.cafedra":
+        "call apoc.do.case([event.op = 'd', 'match (c:Cafedra{code : b_c_code}) detach delete c', event.op = 'c', 'MATCH(i:Institute{id: a_i_id}) CREATE (c:Cafedra{code: a_c_code, title: a_c_title})-[:member_of]->(i)', event.op = 'u', 'match(c:Cafedra {code:a_c_code}) set c.title = a_c_title'], '', {a_i_id: event.after.institutionid, b_c_code:event.before.code, a_c_code:event.after.code, a_c_title:event.after.title}) yield value as v return v",
     "neo4j.topic.cypher.dbserverpostgres.public.course": "",
     "neo4j.topic.cypher.dbserverpostgres.public.specialty": "",
     "neo4j.topic.cypher.dbserverpostgres.public.lesson": ""
