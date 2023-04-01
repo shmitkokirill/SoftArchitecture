@@ -22,7 +22,8 @@
     "neo4j.topic.cypher.dbserverpostgres.public.groups": "",
     "neo4j.topic.cypher.dbserverpostgres.public.cafedra":
         "call apoc.do.case([event.op = 'd', 'match (c:Cafedra{code : b_c_code}) detach delete c', event.op = 'c', 'MATCH(i:Institute{id: a_i_id}) CREATE (c:Cafedra{code: a_c_code, title: a_c_title})-[:member_of]->(i)', event.op = 'u', 'match(c:Cafedra {code:a_c_code}) set c.title = a_c_title'], '', {a_i_id: event.after.institutionid, b_c_code:event.before.code, a_c_code:event.after.code, a_c_title:event.after.title}) yield value as v return v",
-    "neo4j.topic.cypher.dbserverpostgres.public.course": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.course": 
+        "call apoc.do.case([event.op = 'd', 'match (c:Course{id : b_c_id}) detach delete c', event.op = 'c', 'MATCH(ca:Cafedra{code: a_ca_code}) CREATE (c:Course{id: a_c_id, title: a_c_title})-[:member_of]->(ca)', event.op = 'u', 'match(c:Course {id:a_c_id}) set c.title = a_c_title'], '', {a_c_id: event.after.id, b_c_id:event.before.id, a_ca_code:event.after.cafcode, a_c_title:event.after.title}) yield value as v return v",
     "neo4j.topic.cypher.dbserverpostgres.public.specialty": "",
     "neo4j.topic.cypher.dbserverpostgres.public.lesson": ""
   }
