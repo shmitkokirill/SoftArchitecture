@@ -2,14 +2,16 @@
 create table STUDENTS
 (
    code varchar(6) primary key,
-   FULLNAME varchar(60)
+   FULLNAME varchar(60),
+   gcode varchar(10)
 );
 
 ⦁	Создаем таблицу занятий
 
 CREATE TABLE Lesson(
-id serial primary key,
-Title varchar(200)
+    id serial primary key,
+    Title varchar(200),
+    courseid int
 );
 
 CREATE TABLE Institution

@@ -16,9 +16,13 @@
     "neo4j.server.uri": "bolt://neo4j:7687",
     "neo4j.authentication.basic.username": "neo4j",
     "neo4j.authentication.basic.password": "connect",
-    "neo4j.topic.cypher.dbserverpostgres.public.students": 
-        "CREATE (p:Student{code: event.after.code, name: event.after.fullname})",
-    "neo4j.topic.cypher.dbserverpostgres.public.visit": 
-        "CREATE (p:Visit{id: event.after.id, vis: event.after.isvisited})"
+    "neo4j.topic.cypher.dbserverpostgres.public.students": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.groups": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.institution": 
+        "call apoc.do.case([event.op = 'd', 'match (i:Institute{id : b_i_id}) detatch delete i', event.op = 'c', 'create (i:Institute{id: a_i_id, title: a_i_title})', event.op = 'u', 'match(i:Institute {id:a_i_id}) set i.title = a_i_title'], '', {b_i_id:event.before.id, a_i_id:event.after.id, a_i_title:event.after.title}) yield value as v return v",
+    "neo4j.topic.cypher.dbserverpostgres.public.cafedra": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.course": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.specialty": "",
+    "neo4j.topic.cypher.dbserverpostgres.public.lesson": ""
   }
 }
