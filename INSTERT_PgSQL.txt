@@ -1,19 +1,3 @@
-⦁	Создаем таблицу со студентами
-create table STUDENTS
-(
-   code varchar(6) primary key,
-   FULLNAME varchar(60),
-   gcode varchar(10)
-);
-
-⦁	Создаем таблицу занятий
-
-CREATE TABLE Lesson(
-    id serial primary key,
-    Title varchar(200),
-    courseid int
-);
-
 CREATE TABLE Institution
 (
     id serial primary key,
@@ -44,6 +28,15 @@ CREATE TABLE Course
     FOREIGN KEY (cafCode) REFERENCES Cafedra(code)
 );
 
+⦁	Создаем таблицу занятий
+
+CREATE TABLE Lesson(
+    id serial primary key,
+    Title varchar(200),
+    courseid int,
+    FOREIGN KEY (courseid) REFERENCES Course(id)
+);
+
 ⦁	Создаем таблицу с Группами
  CREATE TABLE Groups
 (
@@ -52,6 +45,15 @@ cafedra varchar(4),
 spec varchar(8),
 EndYear int,
 FOREIGN KEY (spec) REFERENCES Specialty(code) 
+);
+
+⦁	Создаем таблицу со студентами
+create table STUDENTS
+(
+   code varchar(6) primary key,
+   FULLNAME varchar(60),
+   gcode varchar(10),
+   FOREIGN KEY (gcode) REFERENCES groups(code)
 );
 
 ⦁	Создаем таблицу с расписанием
@@ -91,8 +93,8 @@ CREATE TABLE GroupStudent
 INSERT INTO Course(title, cafCode) VALUES ('Математика', 'КБ-3');
 
 //----------------------------------SPECIALTIES----------------------------
-INSERT INTO Specialty(code, title, cafedraCode) VALUES ('09.03.02',
-'Информационные системы и технологии', 'КБ-3');
+INSERT INTO Specialty(code, title, cafedraCode) VALUES ('09.03.06',
+'Информационные системы и технологии', 'КБ-5');
 INSERT INTO Specialty(code, title, cafedraCode VALUES ('09.03.04',
 'Сервисные технологии', 'КБ-4');
 
@@ -110,34 +112,34 @@ INSERT INTO Institution(title) VALUES ('Хороший'); --3
 //----------------------------------STUDENTS--------------------------------
 // БСБО-01-19
 
-INSERT INTO Students(code, fullname) VALUES ('STUD1','Аветисян Д.');
-INSERT INTO Students(code, fullname) VALUES ('STUD2','Богатырёв О.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD3','Болотов А.Ю.');
-INSERT INTO Students(code, fullname) VALUES ('STUD4','Буграев Г.Я.');
-INSERT INTO Students(code, fullname) VALUES ('STUD5','Булышев А.П');
-INSERT INTO Students(code, fullname) VALUES ('STUD6','Гордиенко Е.Ю.');
-INSERT INTO Students(code, fullname) VALUES ('STUD7','Горобцов А.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD8','Долгушина Н.И.');
-INSERT INTO Students(code, fullname) VALUES ('STUD9','Донецкая А.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD10','Иванов С.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD11','Ивашин А.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD12','Казанцев В.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD13','Лагуткин Н.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD14','Лубошников М.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD15','Максимов А.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD16','Мелентьев Д.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD17','Никонова Ю.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD18','Очир-Горяева И.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD19','Приходько Д.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD20','Пуртов Д.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD21','Сулохин Р.Р.');
-INSERT INTO Students(code, fullname) VALUES ('STUD22','Трушин М.М.');
-INSERT INTO Students(code, fullname) VALUES ('STUD23','Туминский М.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD24','Шеставина А.С.');
-INSERT INTO Students(code, fullname) VALUES ('STUD25','Шкунов А.В.');
-INSERT INTO Students(code, fullname) VALUES ('STUD26','Шмитько К.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD27','Шнырёва Е.А.');
-INSERT INTO Students(code, fullname) VALUES ('STUD28','Шутикова В.А.'); 
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD1','Аветисян Д.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD2','Богатырёв О.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD3','Болотов А.Ю.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD4','Буграев Г.Я.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD5','Булышев А.П');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD6','Гордиенко Е.Ю.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD7','Горобцов А.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD8','Долгушина Н.И.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD9','Донецкая А.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD10','Иванов С.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD11','Ивашин А.С.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD12','Казанцев В.С.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD13','Лагуткин Н.С.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD14','Лубошников М.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD15','Максимов А.С.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD16','Мелентьев Д.В.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD17','Никонова Ю.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD18','Очир-Горяева И.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD19','Приходько Д.В.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD20','Пуртов Д.В.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD21','Сулохин Р.Р.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD22','Трушин М.М.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD23','Туминский М.В.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD24','Шеставина А.С.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD25','Шкунов А.В.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD26','Шмитько К.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD27','Шнырёва Е.А.');
+INSERT INTO Students(gcode, code, fullname) VALUES ('БСБО-01-19', 'STUD28','Шутикова В.А.'); 
 
 // Рандомные люди
 
@@ -236,9 +238,12 @@ INSERT INTO Students(code, fullname) VALUES ('dTUd22','Шутов Д.В.');
 
 //----------------------------------GROUPS--------------------------------
 
-INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-01-19','КБ-3','09.03.02', 2023);
-INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-02-19','КБ-3','09.03.02', 2023);
-INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БСБО-03-19','КБ-3','09.03.02', 2023);
+INSERT INTO Groups(code, cafedra, spec, endyear) VALUES
+('БСБО-01-19','КБ-3','09.03.06', 2023);
+INSERT INTO Groups(code, cafedra, spec, endyear) VALUES
+('БСБО-02-19','КБ-3','09.03.06', 2023);
+INSERT INTO Groups(code, cafedra, spec, endyear) VALUES
+('БСБО-03-19','КБ-3','09.03.06', 2023);
 INSERT INTO Groups(code, cafedra, spec, endyear) VALUES ('БИСО-01-19','КБ-4','09.03.04', 2023);
 
 
@@ -364,16 +369,17 @@ INSERT INTO GroupStudent(code_st, code_group) VALUES ('STUD59','БИСО-01-19')
 
 //----------------------------------LESSON--------------------------------
 //БСБО
-INSERT INTO Lesson(title) VALUES ('Алгоритмы компонентов цифровой обработки данных');
-INSERT INTO Lesson(title) VALUES ('Анализ программного кода на наличие вредоносных объектов');
-INSERT INTO Lesson(title) VALUES ('Методы и алгоритмы аутентификации компонент программных систем');
-INSERT INTO Lesson(title) VALUES ('Методы системной инженерии');
-INSERT INTO Lesson(title) VALUES ('Облачные технологии');
-INSERT INTO Lesson(title) VALUES ('Организационно-правовое обеспечение защиты информации');
-INSERT INTO Lesson(title) VALUES ('Проектирование архитектуры программного обеспечения');
-INSERT INTO Lesson(title) VALUES ('Разработка безопасного программного обеспечения');
-INSERT INTO Lesson(title) VALUES ('Технологии обеспечения информационной безопасности');
-INSERT INTO Lesson(title) VALUES ('Управление информационно-технологическими проектами');
+INSERT INTO Lesson(title, courseid) VALUES ('Алгоритмы компонентов цифровой обработки
+данных', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Анализ программного кода на наличие вредоносных объектов', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Методы и алгоритмы аутентификации компонент программных систем', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Методы системной инженерии', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Облачные технологии', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Организационно-правовое обеспечение защиты информации', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Проектирование архитектуры программного обеспечения', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Разработка безопасного программного обеспечения', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Технологии обеспечения информационной безопасности', 1);
+INSERT INTO Lesson(title, courseid) VALUES ('Управление информационно-технологическими проектами', 1);
 
 //БИСО
 INSERT INTO Lesson(title) VALUES ('Криптографические методы защиты информации');
