@@ -11,8 +11,9 @@
     "errors.log.enable": true,
     "errors.log.include.messages": true,
     "tasks.max": "1",
-    "topics.regex": "dbserverpostgres\\.[a-z]*\\.[a-z]*",
+    "topics.regex": "postgrest\\.[a-z]*\\.[a-z]*",
     "connection.url": "http://elasticsearch:9200",
-    "key.ignore": true
+    "key.ignore": true,
+    "schema.ignore": true
   }
 }

@@ -164,7 +164,8 @@ services:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
       discovery.type: "single-node"
     volumes:
-      - $PWD/Volumes/elastic:/usr/share/elasticsearch/data
+      # it's not needed now -- too high disk space
+      #  - $PWD/Volumes/elastic:/usr/share/elasticsearch/data
     networks:
       - shared_net
 

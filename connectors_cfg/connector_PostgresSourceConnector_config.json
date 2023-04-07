@@ -7,7 +7,7 @@
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": false,
     "tasks.max": "1",
-    "topic.prefix": "dbserverpostgres",
+    "topic.prefix": "postgrest",
     "database.hostname": "postgres",
     "database.port": "5432",
     "database.user": "postgres",

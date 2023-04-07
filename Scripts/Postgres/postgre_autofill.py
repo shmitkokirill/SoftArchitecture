@@ -1,9 +1,6 @@
 import datetime
 
 import psycopg2
-import redis
-from elasticsearch import Elasticsearch
-import pymongo
 import random
 
 russian_letter = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЭЮЯ'
@@ -39,7 +36,7 @@ last_names = ['Иванов', 'Смирнов', 'Кузнецов', 'Попов'
 
 times_of_lesson = [[9, 0], [10, 40], [12, 40], [14, 20], [16, 20], [18, 00]]
 # postgre
-postgreconn = psycopg2.connect(dbname='TestDB', user='postgres',
+postgreconn = psycopg2.connect(dbname='university', user='postgres',
                                password='postgres', host='localhost')
 postgredb = postgreconn.cursor()
 postgredb.execute('DELETE FROM mirea.visit')
