@@ -2,10 +2,10 @@ from kafka import KafkaConsumer
 from pymongo import MongoClient
 import json
 
-TOPIC_CAF         = 'dbserverpostgres.public.cafedra'
-TOPIC_INS         = 'dbserverpostgres.public.institution'
-TOPIC_SPE         = 'dbserverpostgres.public.specialty'
-TOPIC_COU         = 'dbserverpostgres.public.course'
+TOPIC_CAF         = 'postgrest.mirea.cafedra'
+TOPIC_INS         = 'postgrest.mirea.institutions'
+TOPIC_SPE         = 'postgrest.mirea.speciality'
+TOPIC_COU         = 'postgrest.mirea.course'
 MONGO_CONNECT_CFG = "mongodb://mongo:mongo@mongo:27017"
 MONGO_DB          = 'university'
 BROKER_HOST       = 'broker:29092'
