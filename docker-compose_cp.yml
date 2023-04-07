@@ -145,6 +145,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       volumes:
+        - $PWD/Scripts/Postgres/script.sql:/autofill/script.sql
         - $PWD/postgres:/var/lib/postgresql/data
       networks:
         - shared_net

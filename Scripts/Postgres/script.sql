@@ -149,5 +149,3 @@ alter table mirea.visit
 
 create unique index visit_id_uindex
     on mirea.visit (id);
-
-
