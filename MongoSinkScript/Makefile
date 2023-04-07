@@ -5,8 +5,8 @@ build:
 
 run_b:
 	make build;
-	docker run --rm --name mongo-sink-service -it --network \
+	docker run --rm --name mongo-sink-service -d --network \
 		softarchitecture_shared_net mongo_sink_service
 run:
-	docker run --rm --name mongo-sink-service -it --network \
+	docker run --rm --name mongo-sink-service -d --network \
 		softarchitecture_shared_net mongo_sink_service

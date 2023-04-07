@@ -1,9 +1,4 @@
-elastic
-mongo
-postgres
-neo4j
 Output
 history_*
-kafka
-data
 MongoSinkScript/__pycache__
+Volumes

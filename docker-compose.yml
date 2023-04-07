@@ -1,3 +1,5 @@
+# sudo chmod 777 -R mongo data elastic -- in ./Volumes
+
 version: '2'
 services:
   zookeeper:
@@ -79,7 +81,7 @@ services:
     # run : 
     #   docker cp kafka-connect:/usr/share/confluent-hub-components ./data/connect-jars
     volumes:
-      - $PWD/data:/data
+      - $PWD/Volumes/data:/data
     # In the command section, $ are replaced with $$ to avoid the error 
     #   'Invalid interpolation format for "command" option'
     command:
@@ -146,7 +148,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       volumes:
         - $PWD/Scripts/Postgres/script.sql:/autofill/script.sql
-        - $PWD/postgres:/var/lib/postgresql/data
+        - $PWD/Volumes/postgres:/var/lib/postgresql/data
       networks:
         - shared_net
 
@@ -162,7 +164,7 @@ services:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
       discovery.type: "single-node"
     volumes:
-      - $PWD/elastic:/usr/share/elasticsearch/data
+      - $PWD/Volumes/elastic:/usr/share/elasticsearch/data
     networks:
       - shared_net
 
@@ -177,10 +179,10 @@ services:
       NEO4J_dbms_memory_heap_max__size: 8G
       NEO4J_ACCEPT_LICENSE_AGREEMENT: 'yes'
     volumes:
-      - $PWD/neo4j/logs:/logs
-      - $PWD/neo4j/conf:/conf
-      - $PWD/neo4j/data:/data
-      - $PWD/neo4j/plugins:/plugins
+      - $PWD/Volumes/neo4j/logs:/logs
+      - $PWD/Volumes/neo4j/conf:/conf
+      - $PWD/Volumes/neo4j/data:/data
+      - $PWD/Volumes/neo4j/plugins:/plugins
     networks:
       - shared_net
         
@@ -193,7 +195,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo
     volumes:
-      - $PWD/mongo:/data/db
+      - $PWD/Volumes/mongo:/data/db
     networks:
       - shared_net
 
