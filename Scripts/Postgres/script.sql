@@ -91,10 +91,10 @@ create unique index speciality_code_uindex
 
 create table mirea.course
 (
-    id           integer     not null constraint course_pk primary key,
-    title        varchar(50) not null,
-    cafedra_code varchar(4)  not null constraint course_cafedra_code_fk 
-                                      references mirea.cafedra
+    id        integer     not null constraint course_pk primary key,
+    title     varchar(50) not null,
+    spec_code varchar(8)  not null constraint course_spec_code_fk 
+                                      references mirea.speciality
 );
 
 alter table mirea.course replica identity full;

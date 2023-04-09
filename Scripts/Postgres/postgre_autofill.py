@@ -84,10 +84,10 @@ postgreconn.commit()
 for course in courses_name:
 	id = courses_name.index(course) + 1
 	postgredb.execute(
-		"INSERT INTO mirea.course(id, title, cafedra_code) VALUES (%d, '%s', '%s')" % (
+		"INSERT INTO mirea.course(id, title, spec_code) VALUES (%d, '%s', '%s')" % (
 			id,
 			course,
-			random.choice(cafedras_name))
+			random.choice(speciality_name))
 	)
 postgreconn.commit()
 
