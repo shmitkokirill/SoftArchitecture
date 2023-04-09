@@ -1,0 +1,18 @@
+---INSTITUTIONS---
+
+insert into mirea.institutions(id, title) values (101, 'test1');
+
+
+---CAFEDRA---
+
+insert into mirea.cafedra values('kb-1', 'test_cafedra', 101);
+
+
+---SPECIALTY---
+
+insert into mirea.speciality values('01.01.01', 'test_spec', 'kb-1');
+
+
+---COURSE---
+
+insert into mirea.course values(201, 'test_course', '01.01.01');
