@@ -10,86 +10,106 @@ MONGO_CONNECT_CFG = "mongodb://mongo:mongo@mongo:27017"
 MONGO_DB          = 'university'
 BROKER_HOST       = 'broker:29092'
 
+class Cafedra:
+    def __init__(self, db):
+        self.inst = db["institutions"]
+
+    def insert(self, i_id, c_code, c_title):
+        p_o = {"$push" : {"cafedras" : {"code" : c_code, "title" : c_title}}}
+        self.inst.update_one({"id" : i_id}, p_o)
+
+    # one
+    def delete(self, i_id, c_code):
+        p_o = {"$pull" : {"cafedras" : {"code" : c_code}}}
+        self.inst.update_one({"id" : i_id, "cafedras.code" : c_code}, p_o)
+
+    # many
+    def delete(self, c_code):
+        p_o = {"$pull" : {"cafedras" : {"code" : c_code}}}
+        self.inst.update_one({"cafedras.code" : code}, p_o)
+
+    def update(self, i_id, c_code, c_title):
+        a_filter = [{"caf.code" : c_code}]
+        s_o = {"$set" : {"cafedras.$[caf].title" : c_title}}
+        inst.update_one({"id" : i_id}, s_o, array_filters=a_filter)
+
+class Specialty:
+    def __init__(self, db):
+        self.inst = db["institutions"]
+
+    def insert(self, c_code, s_code, s_title):
+        a_filter = [{"caf.code":c_code}]
+        p_o = {"$push" : {"cafedras.$[caf].specialties" : {
+                            "code" : s_code, "title" : s_title}}}
+        # if needed => update_many
+        self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+
+    # one
+    def delete(self, c_code, s_code):
+        p_o = {"$pull" : {"cafedras.$.specialties" : {"code" : s_code}}}
+        self.inst.update_one({"cafedras.code" : c_code,
+                              "cafedras.specialties.code" : s_code}, p_o)
+
+    # many
+    def delete(self, s_code):
+        p_o = {"$pull" : {"cafedras.$.specialties" : {"code" : s_code}}}
+        self.inst.update_one({"cafedras.specialties.code" : s_code}, p_o)
+
+    def update(self, s_code, s_title):
+        a_filter = [{"spec.code":s_code}]
+        s_o = {"$set":{"cafedras.$.specialties.$[spec].title":s_title}}
+        inst.update_one({"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter)
+
 def process_institutions(json_data, db):
     if json_data['after'] != None:
+        inst  = db["institutions"]
         title = json_data['after']['title']
-        id = json_data['after']['id']
+        id    = json_data['after']['id']
         if json_data['op'] == 'c':
-            try:
-                db["institutions"].insert_one({"id" : id, "title" : title})
-            except:
-                print("Could not insert (c) into Instituions")
+            inst.insert_one({"id" : id, "title" : title})
         if json_data['op'] == 'u':
-            try:
-                db["institutions"].update_one({"id" : id}, {"$set": {"title" : title}})
-            except:
-                print("Could not insert (u) into Instituions")
+            inst.update_one({"id" : id}, {"$set": {"title" : title}})
     if json_data['op'] == 'd' and json_data['before'] != None:
-        id = json_data['before']['id']
-        try:
-            db["institutions"].delete_one({"id" : id})
-        except:
-            print("Could not delete from Instituions")
+        inst.delete_one({"id" : json_data['before']['id']})
 
 def process_cafedras(json_data, db):
+    caf = Cafedra(db)
     if json_data['after'] != None:
-        id = json_data['after']['institutionid']
         title = json_data['after']['title']
-        code = json_data['after']['code']
+        code  = json_data['after']['code']
+        i_id  = json_data['after']['institution_id']
         if json_data['op'] == 'c':
-            push_obj = {"$push" : {"cafedras" : {"code" : code, "title" : title}}}
-            try:
-                db["institutions"].update_one({"id" : id}, push_obj)
-            except:
-                print("Could not insert (c) into Inst.Cafedras")
-        if json_data['op'] == 'u':
-            arr_filter = [{"caf.code":code}]
-            set_obj = {"$set":{"cafedras.$[caf].title":title}}
-            try:
-                db["institutions"].update_one(
-                        {"id":id}, set_obj, array_filters=arr_filter
-                )
-            except:
-                print("Could not insert (u) into Inst.Cafedras")
+            caf.insert(i_id, code, title)
+        if json_data['op'] == 'u' and json_data['before'] != None:
+            i_id_b = json_data['before']['institution_id'] 
+            if i_id_b != i_id:
+                caf.insert(i_id, code, title)  
+                caf.delete(i_id_b, code)
+            else:
+                caf.update(i_id, code, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
         code = json_data['before']['code']
-        pull_obj = {"$pull" : {"cafedras" : {"code" : code}}}
-        try:
-            db["institutions"].update_one({"cafedras.code" : code}, pull_obj)
-        except:
-            print("Could not delete from Inst.Cafedras")
+        caf.delete(code)
 
 def process_specialties(json_data, db):
+    spec = Specialty(db)
     if json_data['after'] != None:
-        caf_code = json_data['after']['cafedracode']
-        title = json_data['after']['title']
-        code = json_data['after']['code']
+        title  = json_data['after']['title']
+        code   = json_data['after']['code']
+        c_code = json_data['after']['cafedra_code']
         if json_data['op'] == 'c':
-            arr_filter = [{"caf.code":caf_code}]
-            push_obj = {"$push" : {"cafedras.$[caf].specialties" : {"code" : code, "title" : title}}}
-            try:
-                db["institutions"].update_one(
-                        {"cafedras.code" : caf_code}, push_obj, array_filters=arr_filter
-                )
-            except:
-                print("Could not insert (c) into Inst.Cafs.Specs")
-        if json_data['op'] == 'u':
-            arr_filter = [{"spec.code":code}]
-            set_obj = {"$set":{"cafedras.$.specialties.$[spec].title":title}}
-            try:
-                db["institutions"].update_one(
-                        {"cafedras.specialties.code":code}, set_obj, array_filters=arr_filter
-                )
-            except:
-                print("Could not insert (u) into Inst.Cafs.Specs")
+            spec.insert(c_code, code, title)
+        if json_data['op'] == 'u' and json_data['before'] != None:
+            c_code_b = json_data['before']['cafedra_code']
+            if c_code != c_code_b:
+                spec.insert(c_code, code, title)
+                spec.delete(c_code_b, code)
+            else:
+                spec.update(code, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
         code = json_data['before']['code']
-        pull_obj = {"$pull" : {"cafedras.$.specialties" : {"code" : code}}}
-        try:
-            db["institutions"].update_one({"cafedras.specialties.code" : code}, pull_obj)
-        except:
-            print("Could not delete from Inst.Cafs.Specs")
-
+        spec.delete(code)
+    
 def process_courses(json_data, db):
     print(json_data)
     if json_data['after'] != None:
@@ -140,13 +160,20 @@ while True:
     for msg in consumer:
         if msg.value == None:
             continue;
+        #test
+        print(msg)
         record = json.loads(msg.value)
-        if msg.topic == TOPIC_CAF:
-            process_cafedras(record, db)
-        if msg.topic == TOPIC_COU:
-            process_courses(record, db)
-        if msg.topic == TOPIC_INS:
-            process_institutions(record, db)
-        if msg.topic == TOPIC_SPE:
-            process_specialties(record, db)
+        try:
+            if msg.topic == TOPIC_CAF:
+                process_cafedras(record, db)
+            if msg.topic == TOPIC_COU:
+                process_courses(record, db)
+            if msg.topic == TOPIC_INS:
+                process_institutions(record, db)
+            if msg.topic == TOPIC_SPE:
+                process_specialties(record, db)
+        except:
+            print("Could't exec op '{}' into {}".format(msg.value['op'], msg.topic))
+            print(json_data)
+
         break;

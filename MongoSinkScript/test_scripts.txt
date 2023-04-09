@@ -1,0 +1,11 @@
+--cafedras--
+
+db.institutions.updateOne({"id" : i_id}, {"$push" : {"cafedras" : {"code" : code, "title" : title}}})
+
+db.institutions.updateOne({"id" : i_id_b, "cafedras.code" : code}, {"$pull" : {"cafedras" : {"code" : code}}})
+
+-- specs --
+
+db.institutions.update(One/Many)({"cafedras.code" : c_code}, {"$push" : {"cafedras.$[caf].specialties" : {"code" : s_code, "title" : s_title}}}, {"arrayFilters" : [{"caf.code":c_code}]})
+
+db.institutions.updateOne({"cafedras.code" : "kb-1", "cafedras.specialties.code" : "01.01.01"}, {"$pull" : {"cafedras.$.specialties" : {"code" : "01.01.01"}}})
