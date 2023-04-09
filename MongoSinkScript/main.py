@@ -19,7 +19,7 @@ class Cafedra:
         self.inst.update_one({"id" : i_id}, p_o)
 
     # one
-    def delete(self, i_id, c_code):
+    def delete_one(self, i_id, c_code):
         p_o = {"$pull" : {"cafedras" : {"code" : c_code}}}
         self.inst.update_one({"id" : i_id, "cafedras.code" : c_code}, p_o)
 
@@ -37,15 +37,31 @@ class Specialty:
     def __init__(self, db):
         self.inst = db["institutions"]
 
-    def insert(self, c_code, s_code, s_title):
-        a_filter = [{"caf.code":c_code}]
-        p_o = {"$push" : {"cafedras.$[caf].specialties" : {
-                            "code" : s_code, "title" : s_title}}}
-        # if needed => update_many
-        self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+    def insert(self, c_code, s_code, s_title, nested = False):
+        if not nested:
+            a_filter = [{"caf.code":c_code}]
+            p_o = {"$push" : {"cafedras.$[caf].specialties" : {
+                                "code" : s_code, "title" : s_title}}}
+            # if needed => update_many
+            self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+        else:
+            find = self.inst.find_one(
+                    {"cafedras.specialties.code" : s_code},
+                    {"cafedras.specialties.$" : 1}
+            )
+            print(find) #test
+            courses = find['cafedras'][0]['specialties'][0]['courses']
+            print(courses)
+            a_filter = [{"caf.code":c_code}]
+            p_o = {"$push" : {"cafedras.$[caf].specialties" : {
+                    "code" : s_code, "title" : s_title, "courses": courses}}}
+            # if needed => update_many
+            res = self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+            print(res)
 
     # one
-    def delete(self, c_code, s_code):
+    def delete_one(self, c_code, s_code):
+        print("c_code = {}, s_code = {}".format(c_code, s_code)) #test
         p_o = {"$pull" : {"cafedras.$.specialties" : {"code" : s_code}}}
         self.inst.update_one({"cafedras.code" : c_code,
                               "cafedras.specialties.code" : s_code}, p_o)
@@ -60,9 +76,39 @@ class Specialty:
         s_o = {"$set":{"cafedras.$.specialties.$[spec].title":s_title}}
         inst.update_one({"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter)
 
+class Course:
+    def __init__(self, db):
+        self.inst = db["institutions"]
+
+    def insert(self, s_code, c_id, c_title):
+        a_filter = [{"spec.code" : s_code}]
+        p_o = {"$push" : {"cafedras.$.specialties.$[spec].courses" : {
+                            "id" : c_id, "title" : c_title}}}
+        # if needed => update_many
+        self.inst.update_one({"cafedras.specialties.code" : s_code}, p_o, array_filters=a_filter)
+
+    # one
+    def delete_one(self, s_code, c_id):
+        a_filter = [{"spec.code" : s_code}]
+        p_o = {"$pull" : 
+               {"cafedras.$.specialties.$[spec].courses" : {"id" : c_id}}}
+        self.inst.update_one({"cafedras.specialties.courses.id" : c_id}, p_o, array_filters=a_filter)
+
+    # many
+    def delete(self, c_id):
+        a_filter = [{"cour.courses.id" : 1}]
+        p_o = {"$pull" : 
+               {"cafedras.$.specialties.$[cour].courses" : {"id" : c_id}}}
+        self.inst.update_one({"cafedras.specialties.courses.id" : c_id}, p_o, array_filters = a_filter)
+
+    def update(self, c_id, c_title):
+        a_filter = [{"spec.code":s_code}]
+        s_o = {"$set":{"cafedras.$.specialties.$[spec].courses.title" : c_title}}
+        inst.update_one({"cafedras.specialties.courses.id" : c_id}, s_o, array_filters=a_filter)
+
 def process_institutions(json_data, db):
+    inst = db["institutions"]
     if json_data['after'] != None:
-        inst  = db["institutions"]
         title = json_data['after']['title']
         id    = json_data['after']['id']
         if json_data['op'] == 'c':
@@ -84,7 +130,7 @@ def process_cafedras(json_data, db):
             i_id_b = json_data['before']['institution_id'] 
             if i_id_b != i_id:
                 caf.insert(i_id, code, title)  
-                caf.delete(i_id_b, code)
+                caf.delete_one(i_id_b, code)
             else:
                 caf.update(i_id, code, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
@@ -102,8 +148,8 @@ def process_specialties(json_data, db):
         if json_data['op'] == 'u' and json_data['before'] != None:
             c_code_b = json_data['before']['cafedra_code']
             if c_code != c_code_b:
-                spec.insert(c_code, code, title)
-                spec.delete(c_code_b, code)
+                spec.insert(c_code, code, title, True)
+                spec.delete_one(c_code_b, code)
             else:
                 spec.update(code, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
@@ -111,34 +157,23 @@ def process_specialties(json_data, db):
         spec.delete(code)
     
 def process_courses(json_data, db):
-    print(json_data)
+    c = Course(db)
     if json_data['after'] != None:
-        id = json_data['after']['id']
-        caf_code = json_data['after']['cafcode']
-        title = json_data['after']['title']
+        title  = json_data['after']['title']
+        c_id   = json_data['after']['id']
+        s_code = json_data['after']['spec_code']
         if json_data['op'] == 'c':
-            arr_filter = [{"caf.code": caf_code}]
-            push_obj = {"$push" : {"cafedras.$[caf].courses" : {"id" : id, "title" : title}}}
-            try:
-                db["institutions"].update_one({"cafedras.code" : caf_code}, push_obj, array_filters=arr_filter)
-            except:
-                print("Could not insert (c) into Inst.Cafedras.Courses")
-        if json_data['op'] == 'u':
-            arr_filter = [{"course.id":id}]
-            set_obj = {"$set":{"cafedras.$.courses.$[course].title":title}}
-            try:
-                db["institutions"].update_one(
-                        {"cafedras.courses.id":id}, set_obj, array_filters=arr_filter
-                )
-            except:
-                print("Could not insert (u) into Inst.Cafedras.Courses")
+            c.insert(s_code, c_id, title)
+        if json_data['op'] == 'u' and json_data['before'] != None:
+            s_code_b = json_data['before']['spec_code']
+            if s_code != s_code_b:
+                c.insert(s_code, c_id, title)
+                c.delete_one(s_code_b, c_id)
+            else:
+                c.update(c_id, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
-        id = json_data['before']['id']
-        pull_obj = {"$pull" : {"cafedras.$.courses" : {"id" : id}}}
-        try:
-            db["institutions"].update_one({"cafedras.courses.id" : id}, pull_obj)
-        except:
-            print("Could not delete from Inst.Cafedras.Courses")
+        c_id = json_data['before']['id']
+        c.delete(c_id)
 
 # connect to mongo
 try:
@@ -175,5 +210,4 @@ while True:
         except:
             print("Could't exec op '{}' into {}".format(msg.value['op'], msg.topic))
             print(json_data)
-
         break;
