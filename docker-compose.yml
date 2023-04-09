@@ -163,7 +163,7 @@ services:
       xpack.security.enabled: "false"
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
       discovery.type: "single-node"
-    volumes:
+        #volumes:
       # it's not needed now -- too high disk space
       #  - $PWD/Volumes/elastic:/usr/share/elasticsearch/data
     networks:
