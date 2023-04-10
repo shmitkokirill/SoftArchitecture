@@ -61,7 +61,6 @@ class Specialty:
         self.inst = db["institutions"]
 
     def find(self, finded_doc, s_code):
-        print(finded_doc)
         if finded_doc == None:
             return [] 
         if finded_doc["cafedras"][0]                 and \
@@ -76,30 +75,35 @@ class Specialty:
 
     def insert(self, c_code, s_code, s_title, nested = False):
         if not nested:
-            a_filter = [{"caf.code":c_code}]
-            p_o = {"$push" : {"cafedras.$[caf].specialties" : {
-                                "code" : s_code, "title" : s_title}}}
+            a_filter = [{"caf.code" : c_code}]
+            p_o = {"$push" : 
+                   {"cafedras.$[caf].specialties" : 
+                    {"code" : s_code, "title" : s_title}}}
             # if needed => update_many
-            self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+            self.inst.update_one (
+                {"cafedras.code" : c_code}, p_o, array_filters=a_filter
+            )
         else:
-            print("nested")
             finded_doc = self.inst.find_one(
-                    {"cafedras.specialties.code" : s_code},
-                    {"cafedras.specialties.$" : 1}
+                {"cafedras.specialties.code" : s_code},
+                {"cafedras.specialties.$" : 1}
             )
             courses = self.find(finded_doc, s_code)
             a_filter = [{"caf.code":c_code}]
             p_o = {"$push" : {"cafedras.$[caf].specialties" : {
                     "code" : s_code, "title" : s_title, "courses": courses}}}
             # if needed => update_many
-            res = self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
-            print(res)
+            self.inst.update_one(
+                {"cafedras.code" : c_code}, p_o, array_filters=a_filter
+            )
 
     # one
     def delete_one(self, c_code, s_code):
         a_filter = [{"caf.code" : c_code}]
         p_o = {"$pull" : {"cafedras.$[caf].specialties" : {"code" : s_code}}}
-        self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
+        self.inst.update_one(
+            {"cafedras.code" : c_code}, p_o, array_filters=a_filter
+        )
 
     # many
     def delete(self, s_code):
@@ -109,7 +113,9 @@ class Specialty:
     def update(self, s_code, s_title):
         a_filter = [{"spec.code":s_code}]
         s_o = {"$set":{"cafedras.$.specialties.$[spec].title":s_title}}
-        inst.update_one({"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter)
+        inst.update_one(
+            {"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter
+        )
 
 class Course:
     def __init__(self, db):
@@ -117,29 +123,38 @@ class Course:
 
     def insert(self, s_code, c_id, c_title):
         a_filter = [{"spec.code" : s_code}]
-        p_o = {"$push" : {"cafedras.$.specialties.$[spec].courses" : {
-                            "id" : c_id, "title" : c_title}}}
+        p_o = {"$push" : 
+               {"cafedras.$.specialties.$[spec].courses" : 
+                {"id" : c_id, "title" : c_title}}}
         # if needed => update_many
-        self.inst.update_one({"cafedras.specialties.code" : s_code}, p_o, array_filters=a_filter)
+        self.inst.update_one(
+            {"cafedras.specialties.code" : s_code}, p_o, array_filters=a_filter
+        )
 
     # one
     def delete_one(self, s_code, c_id):
         a_filter = [{"spec.code" : s_code}]
         p_o = {"$pull" : 
                {"cafedras.$.specialties.$[spec].courses" : {"id" : c_id}}}
-        self.inst.update_one({"cafedras.specialties.courses.id" : c_id}, p_o, array_filters=a_filter)
+        self.inst.update_one(
+            {"cafedras.specialties.courses.id" : c_id}, p_o, array_filters=a_filter
+        )
 
     # many
     def delete(self, c_id):
         a_filter = [{"cour.courses.id" : 1}]
         p_o = {"$pull" : 
                {"cafedras.$.specialties.$[cour].courses" : {"id" : c_id}}}
-        self.inst.update_one({"cafedras.specialties.courses.id" : c_id}, p_o, array_filters = a_filter)
+        self.inst.update_one(
+            {"cafedras.specialties.courses.id" : c_id}, p_o, array_filters = a_filter
+        )
 
     def update(self, c_id, c_title):
         a_filter = [{"spec.code":s_code}]
         s_o = {"$set":{"cafedras.$.specialties.$[spec].courses.title" : c_title}}
-        inst.update_one({"cafedras.specialties.courses.id" : c_id}, s_o, array_filters=a_filter)
+        inst.update_one(
+            {"cafedras.specialties.courses.id" : c_id}, s_o, array_filters=a_filter
+        )
 
 def process_institutions(json_data, db):
     inst = db["institutions"]
@@ -230,8 +245,6 @@ while True:
     for msg in consumer:
         if msg.value == None:
             continue;
-        #test
-        print(msg)
         record = json.loads(msg.value)
         try:
             if msg.topic == TOPIC_CAF:
