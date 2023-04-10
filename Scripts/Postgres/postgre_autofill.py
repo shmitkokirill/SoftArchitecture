@@ -1,5 +1,5 @@
 import datetime
-
+import time
 import psycopg2
 import random
 
@@ -51,12 +51,16 @@ postgredb.execute('DELETE FROM mirea.institutions')
 
 postgreconn.commit()
 
+time.sleep(5)
+
 # fill_institutions
 for inst in institutes_name:
 	postgredb.execute(
 		"INSERT INTO mirea.institutions(id, title) VALUES (%d,'%s')" % (institutes_name.index(inst) + 1, inst)
 	)
 postgreconn.commit()
+
+time.sleep(5)
 
 # fill_cafedras
 for cafedra in cafedras_name:
@@ -69,6 +73,8 @@ for cafedra in cafedras_name:
 	)
 postgreconn.commit()
 
+time.sleep(5)
+
 # fill_speciality
 for spec in speciality_name:
 	id = speciality_name.index(spec) + 1
@@ -79,6 +85,8 @@ for spec in speciality_name:
 			random.choice(cafedras_name))
 	)
 postgreconn.commit()
+
+time.sleep(5)
 
 # fill_course
 for course in courses_name:
@@ -91,6 +99,8 @@ for course in courses_name:
 	)
 postgreconn.commit()
 
+time.sleep(5)
+
 # fill lesson
 for lesson in lesson_name:
 	id = lesson_name.index(lesson) + 1
@@ -102,6 +112,8 @@ for lesson in lesson_name:
 	)
 postgreconn.commit()
 
+time.sleep(5)
+
 # fill gruppa
 for gruppa in gruppa_name:
 	id = gruppa_name.index(gruppa) + 1
@@ -112,6 +124,8 @@ for gruppa in gruppa_name:
 			2023)
 	)
 postgreconn.commit()
+
+time.sleep(5)
 
 # fill student
 stud_codes = [[], [], []]
@@ -127,6 +141,8 @@ for i in range(60):
 			gruppa)
 	)
 postgreconn.commit()
+
+time.sleep(5)
 
 # fill timetable + visit
 tt_id = 0
@@ -163,5 +179,6 @@ for gruppa in gruppa_name:
 				break
 
 postgreconn.commit()
+
 postgredb.close()
 postgreconn.close()
