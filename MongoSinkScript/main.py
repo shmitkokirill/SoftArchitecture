@@ -14,9 +14,33 @@ class Cafedra:
     def __init__(self, db):
         self.inst = db["institutions"]
 
-    def insert(self, i_id, c_code, c_title):
-        p_o = {"$push" : {"cafedras" : {"code" : c_code, "title" : c_title}}}
-        self.inst.update_one({"id" : i_id}, p_o)
+    def find(self, finded_doc, c_code):
+        if finded_doc == None:
+            return [] 
+        if finded_doc[0]["cafedras"]:
+            cafs = finded_doc[0]["cafedras"]
+            for caf in cafs:
+                if caf["code"] != c_code:
+                    continue
+                if caf["specialties"]:
+                    return caf["specialties"]
+        return []
+
+    def insert(self, i_id, c_code, c_title, nested = False):
+        if not nested:
+            p_o = {"$push" : {"cafedras" : {"code" : c_code, "title" : c_title}}}
+            self.inst.update_one({"id" : i_id}, p_o)
+        else:
+            finded_doc = self.inst.find_one(
+                    {"cafedras.code" : c_code},
+                    {"cafedras.$" : 1}
+            )
+            specs = self.find(finded_doc, c_code)
+            p_o = {"$push" : 
+                   {"cafedras" : 
+                    {"code" : c_code, "title" : c_title, "specialties" : specs}}}
+            self.inst.update_one({"id" : i_id}, p_o)
+
 
     # one
     def delete_one(self, i_id, c_code):
@@ -37,6 +61,21 @@ class Specialty:
     def __init__(self, db):
         self.inst = db["institutions"]
 
+    def find(self, finded_doc, s_code):
+        if finded_doc == None:
+            return [] 
+        if finded_doc[0]["cafedras"][0]                 and
+           finded_doc[0]["cafedras"][0]["specialties"]  and
+           finded_doc[0]["cafedras"][0]["specialties"][0] :
+
+            specs = finded_doc[0]["cafedras"][0]["specialties"]
+            for spec in specs:
+                if spec["code"] != s_code:
+                    continue
+                if spec["courses"]:
+                    return spec["courses"]
+        return []
+
     def insert(self, c_code, s_code, s_title, nested = False):
         if not nested:
             a_filter = [{"caf.code":c_code}]
@@ -45,13 +84,11 @@ class Specialty:
             # if needed => update_many
             self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
         else:
-            find = self.inst.find_one(
+            finded_doc = self.inst.find_one(
                     {"cafedras.specialties.code" : s_code},
                     {"cafedras.specialties.$" : 1}
             )
-            print(find) #test
-            courses = find['cafedras'][0]['specialties'][0]['courses']
-            print(courses)
+            courses = self.find(finded_doc, s_code)
             a_filter = [{"caf.code":c_code}]
             p_o = {"$push" : {"cafedras.$[caf].specialties" : {
                     "code" : s_code, "title" : s_title, "courses": courses}}}
@@ -129,7 +166,7 @@ def process_cafedras(json_data, db):
         if json_data['op'] == 'u' and json_data['before'] != None:
             i_id_b = json_data['before']['institution_id'] 
             if i_id_b != i_id:
-                caf.insert(i_id, code, title)  
+                caf.insert(i_id, code, title, True)  
                 caf.delete_one(i_id_b, code)
             else:
                 caf.update(i_id, code, title)
