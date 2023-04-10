@@ -17,8 +17,8 @@ class Cafedra:
     def find(self, finded_doc, c_code):
         if finded_doc == None:
             return [] 
-        if finded_doc[0]["cafedras"]:
-            cafs = finded_doc[0]["cafedras"]
+        if finded_doc["cafedras"]:
+            cafs = finded_doc["cafedras"]
             for caf in cafs:
                 if caf["code"] != c_code:
                     continue
@@ -41,7 +41,6 @@ class Cafedra:
                     {"code" : c_code, "title" : c_title, "specialties" : specs}}}
             self.inst.update_one({"id" : i_id}, p_o)
 
-
     # one
     def delete_one(self, i_id, c_code):
         p_o = {"$pull" : {"cafedras" : {"code" : c_code}}}
@@ -62,13 +61,12 @@ class Specialty:
         self.inst = db["institutions"]
 
     def find(self, finded_doc, s_code):
+        print(finded_doc)
         if finded_doc == None:
             return [] 
-        if finded_doc[0]["cafedras"][0]                 and
-           finded_doc[0]["cafedras"][0]["specialties"]  and
-           finded_doc[0]["cafedras"][0]["specialties"][0] :
-
-            specs = finded_doc[0]["cafedras"][0]["specialties"]
+        if finded_doc["cafedras"][0]                 and \
+           finded_doc["cafedras"][0]["specialties"]:
+            specs = finded_doc["cafedras"][0]["specialties"]
             for spec in specs:
                 if spec["code"] != s_code:
                     continue
@@ -84,6 +82,7 @@ class Specialty:
             # if needed => update_many
             self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
         else:
+            print("nested")
             finded_doc = self.inst.find_one(
                     {"cafedras.specialties.code" : s_code},
                     {"cafedras.specialties.$" : 1}
@@ -98,10 +97,9 @@ class Specialty:
 
     # one
     def delete_one(self, c_code, s_code):
-        print("c_code = {}, s_code = {}".format(c_code, s_code)) #test
-        p_o = {"$pull" : {"cafedras.$.specialties" : {"code" : s_code}}}
-        self.inst.update_one({"cafedras.code" : c_code,
-                              "cafedras.specialties.code" : s_code}, p_o)
+        a_filter = [{"caf.code" : c_code}]
+        p_o = {"$pull" : {"cafedras.$[caf].specialties" : {"code" : s_code}}}
+        self.inst.update_one({"cafedras.code" : c_code}, p_o, array_filters=a_filter)
 
     # many
     def delete(self, s_code):
