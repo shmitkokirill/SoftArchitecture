@@ -137,7 +137,7 @@ class Course:
         p_o = {"$pull" : 
                {"cafedras.$.specialties.$[spec].courses" : {"id" : c_id}}}
         self.inst.update_one(
-            {"cafedras.specialties.courses.id" : c_id}, p_o, array_filters=a_filter
+            {"cafedras.specialties.code" : s_code}, p_o, array_filters=a_filter
         )
 
     # many
