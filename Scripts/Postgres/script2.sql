@@ -1,3 +1,5 @@
+create schema mirea;
+
 create table mirea.institutions
 (
     id    integer     not null

@@ -49,7 +49,7 @@ class Cafedra:
     # many
     def delete(self, c_code):
         p_o = {"$pull" : {"cafedras" : {"code" : c_code}}}
-        self.inst.update_one({"cafedras.code" : code}, p_o)
+        self.inst.update_one({"cafedras.code" : c_code}, p_o)
 
     def update(self, i_id, c_code, c_title):
         a_filter = [{"caf.code" : c_code}]
@@ -110,11 +110,11 @@ class Specialty:
         p_o = {"$pull" : {"cafedras.$.specialties" : {"code" : s_code}}}
         self.inst.update_one({"cafedras.specialties.code" : s_code}, p_o)
 
-    def update(self, s_code, s_title):
-        a_filter = [{"spec.code":s_code}]
-        s_o = {"$set":{"cafedras.$.specialties.$[spec].title":s_title}}
+    def update(self, c_code, s_code, s_title):
+        a_filter = [{"spec.code" : s_code}, {"caf.code" : c_code}]
+        s_o = {"$set":{"cafedras.$[caf].specialties.$[spec].title" : s_title}}
         self.inst.update_one(
-            {"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter
+            {"cafedras.specialties.code" : s_code}, s_o, array_filters=a_filter
         )
 
 class Course:
@@ -142,16 +142,15 @@ class Course:
 
     # many
     def delete(self, c_id):
-        a_filter = [{"cour.courses.id" : 1}]
         p_o = {"$pull" : 
-               {"cafedras.$.specialties.$[cour].courses" : {"id" : c_id}}}
+               {"cafedras.$.specialties.$[].courses" : {"id" : c_id}}}
         self.inst.update_one(
-            {"cafedras.specialties.courses.id" : c_id}, p_o, array_filters = a_filter
-        )
+            {"cafedras.specialties.courses.id" : c_id}, p_o)
 
-    def update(self, c_id, c_title):
-        a_filter = [{"spec.code":s_code}]
-        s_o = {"$set":{"cafedras.$.specialties.$[spec].courses.title" : c_title}}
+    def update(self, s_code, c_id, c_title):
+        a_filter = [{"spec.code" : s_code}, {"cor.id" : c_id}]
+        set_title_q = "cafedras.$.specialties.$[spec].courses.$[cor].title"
+        s_o = {"$set" : { set_title_q : c_title}}
         self.inst.update_one(
             {"cafedras.specialties.courses.id" : c_id}, s_o, array_filters=a_filter
         )
@@ -201,7 +200,7 @@ def process_specialties(json_data, db):
                 spec.insert(c_code, code, title, True)
                 spec.delete_one(c_code_b, code)
             else:
-                spec.update(code, title)
+                spec.update(c_code, code, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
         code = json_data['before']['code']
         spec.delete(code)
@@ -220,8 +219,10 @@ def process_courses(json_data, db):
                 c.insert(s_code, c_id, title)
                 c.delete_one(s_code_b, c_id)
             else:
-                c.update(c_id, title)
+                c.update(s_code, c_id, title)
     if json_data['op'] == 'd' and json_data['before'] != None:
+        # test
+        print(json_data)
         c_id = json_data['before']['id']
         c.delete(c_id)
 
