@@ -54,7 +54,7 @@ class Cafedra:
     def update(self, i_id, c_code, c_title):
         a_filter = [{"caf.code" : c_code}]
         s_o = {"$set" : {"cafedras.$[caf].title" : c_title}}
-        inst.update_one({"id" : i_id}, s_o, array_filters=a_filter)
+        self.inst.update_one({"id" : i_id}, s_o, array_filters=a_filter)
 
 class Specialty:
     def __init__(self, db):
@@ -113,7 +113,7 @@ class Specialty:
     def update(self, s_code, s_title):
         a_filter = [{"spec.code":s_code}]
         s_o = {"$set":{"cafedras.$.specialties.$[spec].title":s_title}}
-        inst.update_one(
+        self.inst.update_one(
             {"cafedras.specialties.code":s_code}, s_o, array_filters=a_filter
         )
 
@@ -152,7 +152,7 @@ class Course:
     def update(self, c_id, c_title):
         a_filter = [{"spec.code":s_code}]
         s_o = {"$set":{"cafedras.$.specialties.$[spec].courses.title" : c_title}}
-        inst.update_one(
+        self.inst.update_one(
             {"cafedras.specialties.courses.id" : c_id}, s_o, array_filters=a_filter
         )
 
