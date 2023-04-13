@@ -148,6 +148,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       volumes:
         - $PWD/Scripts/Postgres/script.sql:/autofill/script.sql
+        - $PWD/Scripts/Postgres/script2.sql:/autofill/script2.sql
         - $PWD/Volumes/postgres:/var/lib/postgresql/data
       networks:
         - shared_net
