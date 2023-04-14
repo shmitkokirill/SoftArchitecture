@@ -5,6 +5,7 @@
     "key.converter.schemas.enable": false,
     "value.converter.schemas.enable": false,
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "behavior.on.null.values" : "ignore",
     "errors.retry.timeout": "-1",
     "errors.retry.delay.max.ms": "1000",
     "errors.tolerance": "all",
