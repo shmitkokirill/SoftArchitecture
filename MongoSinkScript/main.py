@@ -21,8 +21,7 @@ class Cafedra:
         if "cafedras" in finded_doc.keys():
             cafs = finded_doc["cafedras"]
             for caf in cafs:
-                if "code" in caf.keys() and caf["code"] != c_code:
-                    continue
+                if "code" not in caf.keys() or caf["code"] != c_code: continue
                 if "specialties" in caf.keys():
                     return caf["specialties"]
         return []
@@ -64,12 +63,11 @@ class Specialty:
     def find(self, finded_doc, s_code):
         if finded_doc == None:
             return []
-        if "cafedras" in finded_doc.keys() and \
-            len(finded_doc["cafedras"])>0 and \
+        if "cafedras" in finded_doc.keys() and len(finded_doc["cafedras"])>0 and \
            "specialties" in finded_doc["cafedras"][0].keys() :
             specs = finded_doc["cafedras"][0]["specialties"]
             for spec in specs:
-                if "code" in spec.keys() and spec["code"] != s_code:
+                if "code" not in spec.keys() or spec["code"] != s_code:
                     continue
                 if "courses" in spec.keys():
                     return spec["courses"]

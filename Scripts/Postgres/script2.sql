@@ -1,3 +1,4 @@
+create schema mirea;
 
 /* INSTITUTIONS */
 
