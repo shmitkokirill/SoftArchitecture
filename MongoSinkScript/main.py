@@ -1,6 +1,7 @@
+import json
+
 from kafka import KafkaConsumer
 from pymongo import MongoClient
-import json
 
 TOPIC_CAF         = 'postgrest.mirea.cafedra'
 TOPIC_INS         = 'postgrest.mirea.institutions'
@@ -16,13 +17,13 @@ class Cafedra:
 
     def find(self, finded_doc, c_code):
         if finded_doc == None:
-            return [] 
-        if finded_doc["cafedras"]:
+            return []
+        if "cafedras" in finded_doc.keys():
             cafs = finded_doc["cafedras"]
             for caf in cafs:
-                if caf["code"] != c_code:
+                if "code" in caf.keys() and caf["code"] != c_code:
                     continue
-                if caf["specialties"]:
+                if "specialties" in caf.keys():
                     return caf["specialties"]
         return []
 
@@ -62,14 +63,15 @@ class Specialty:
 
     def find(self, finded_doc, s_code):
         if finded_doc == None:
-            return [] 
-        if finded_doc["cafedras"][0]                 and \
-           finded_doc["cafedras"][0]["specialties"]:
+            return []
+        if "cafedras" in finded_doc.keys() and \
+            len(finded_doc["cafedras"])>0 and \
+           "specialties" in finded_doc["cafedras"][0].keys() :
             specs = finded_doc["cafedras"][0]["specialties"]
             for spec in specs:
-                if spec["code"] != s_code:
+                if "code" in spec.keys() and spec["code"] != s_code:
                     continue
-                if spec["courses"]:
+                if "courses" in spec.keys():
                     return spec["courses"]
         return []
 
@@ -123,8 +125,8 @@ class Course:
 
     def insert(self, s_code, c_id, c_title):
         a_filter = [{"spec.code" : s_code}]
-        p_o = {"$push" : 
-               {"cafedras.$.specialties.$[spec].courses" : 
+        p_o = {"$push" :
+               {"cafedras.$.specialties.$[spec].courses" :
                 {"id" : c_id, "title" : c_title}}}
         # if needed => update_many
         self.inst.update_one(
@@ -134,7 +136,7 @@ class Course:
     # one
     def delete_one(self, s_code, c_id):
         a_filter = [{"spec.code" : s_code}]
-        p_o = {"$pull" : 
+        p_o = {"$pull" :
                {"cafedras.$.specialties.$[spec].courses" : {"id" : c_id}}}
         self.inst.update_one(
             {"cafedras.specialties.code" : s_code}, p_o, array_filters=a_filter
